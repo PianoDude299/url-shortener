@@ -8,6 +8,11 @@ url_mapping = {}
 def generate_short_url():
     return ''.join(random.choices(string.ascii_letters + string.digits, k=6))
 
+# 🆕 Add this route
+@app.route('/')
+def home():
+    return "URL Shortener is running!"
+
 @app.route('/shorten', methods=['POST'])
 def shorten_url():
     data = request.get_json()
