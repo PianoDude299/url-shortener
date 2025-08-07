@@ -21,7 +21,10 @@ def shorten_url():
         return jsonify({'error': 'No URL provided'}), 400
     short = generate_short_url()
     url_mapping[short] = original_url
-    return jsonify({'short_url': f"http://localhost:5000/{short}"})
+    # Fix: generate short URL using actual domain
+    short_url = request.host_url + short
+    return jsonify({'short_url': short_url})
+
 
 @app.route('/<short>')
 def redirect_url(short):
