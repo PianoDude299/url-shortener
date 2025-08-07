@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, redirect
 import random
 import string
 
@@ -8,7 +8,6 @@ url_mapping = {}
 def generate_short_url():
     return ''.join(random.choices(string.ascii_letters + string.digits, k=6))
 
-# 🆕 Add this route
 @app.route('/')
 def home():
     return "URL Shortener is running!"
@@ -21,16 +20,13 @@ def shorten_url():
         return jsonify({'error': 'No URL provided'}), 400
     short = generate_short_url()
     url_mapping[short] = original_url
-    # Fix: generate short URL using actual domain
-    short_url = request.host_url + short
-    return jsonify({'short_url': short_url})
-
+    return jsonify({'short_url': f"https://url-shortener-cess.onrender.com/{short}"})
 
 @app.route('/<short>')
 def redirect_url(short):
     url = url_mapping.get(short)
     if url:
-        return jsonify({'redirect_to': url})
+        return redirect(url)  # <-- changed from jsonify() to redirect()
     return jsonify({'error': 'URL not found'}), 404
 
 if __name__ == '__main__':
